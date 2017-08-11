@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-   resources :destination
+   root :to => "vote#vote"
+   post 'vote', :to => 'vote#first_vote', :as => "first_vote"
 end
