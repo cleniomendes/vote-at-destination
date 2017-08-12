@@ -17,4 +17,15 @@ class VoteController < ApplicationController
             redirect_to root_path
         end
     end
+    
+    def keep_voting
+        unless params[:destination_id].nil?
+            cookies[:other_destination] = params[:destination_id]
+            render :template => 'vote/confirm_vote'
+        else
+            flash[:error] = "Please, Choose at least one destination"
+            @destinations = Destination.where.not(id: cookies[:found_destinations].split(",")) 
+            render :template => 'vote/keep_voting'
+        end
+    end
 end

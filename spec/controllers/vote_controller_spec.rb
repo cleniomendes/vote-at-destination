@@ -48,5 +48,28 @@ RSpec.describe VoteController, type: :controller do
             post :first_vote, :params => {destination_id: 1}
             expect(assigns(:destinations).length).to eq(Destination.count - 2)
         end
+        
+        it "when return flash message if no params" do 
+            post :first_vote, :params => {}
+            expect(flash[:error]).to be_present
+        end
+    end
+    
+    describe "#Post keep voting" do
+        it "when value cookie has param" do
+            params = {
+                destination_id: 1    
+            }
+            post :keep_voting, :params => params
+            expect(response.should).to render_template("vote/confirm_vote")
+            
+        end
+        
+        it "when return flash message if no params" do 
+            request.cookies[:found_destinations] = "1,2"
+            post :keep_voting, :params => {}
+            expect(response.should).to render_template("vote/keep_voting")
+            expect(flash[:error]).to be_present
+        end
     end
 end
