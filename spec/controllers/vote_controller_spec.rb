@@ -19,7 +19,6 @@ RSpec.describe VoteController, type: :controller do
         end
       
         it "renders the :vote view" do
-            destination = create(:destination)
             get :vote
             expect(response.should).to render_template ('vote/vote')
         end
@@ -61,7 +60,7 @@ RSpec.describe VoteController, type: :controller do
                 destination_id: 1    
             }
             post :keep_voting, :params => params
-            expect(response.should).to render_template("vote/confirm_vote")
+            expect(response.should).to redirect_to :new_user
             
         end
         
@@ -72,4 +71,23 @@ RSpec.describe VoteController, type: :controller do
             expect(flash[:error]).to be_present
         end
     end
+    
+    describe "#Post finish_poll" do 
+        before do 
+            create(:user)
+            ["Rio De Janeiro","São Paulo"].each do |c|
+                create(:destination, :name => c)
+            end
+        end
+    
+        it "when vote successfully added" do 
+            params = {:param1 => 1}
+            request.cookies[:vote_0] = "1"
+            request.cookies[:vote_1] = "2"
+            post :finish_poll, :params => params
+            expect(response).to redirect_to(root_path)
+            expect(Vote.count).to eq (2)
+        end
+    end
+    
 end

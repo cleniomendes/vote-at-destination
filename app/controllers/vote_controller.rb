@@ -9,7 +9,7 @@ class VoteController < ApplicationController
     
     def first_vote
         unless params[:destination_id].nil?
-            cookies[:destination] = params[:destination_id]
+            cookies[:vote_0] = params[:destination_id]
             @destinations = Destination.where.not(id: cookies[:found_destinations].split(",")) 
             render :template => 'vote/keep_voting'
         else
@@ -20,12 +20,24 @@ class VoteController < ApplicationController
     
     def keep_voting
         unless params[:destination_id].nil?
-            cookies[:other_destination] = params[:destination_id]
-            render :template => 'vote/confirm_vote'
+            cookies[:vote_1] = params[:destination_id]
+            redirect_to new_user_path
         else
             flash[:error] = "Please, Choose at least one destination"
             @destinations = Destination.where.not(id: cookies[:found_destinations].split(",")) 
             render :template => 'vote/keep_voting'
         end
+    end
+    
+    def finish_poll
+        2.times do |i| 
+            cookie_value = "vote_#{i}"
+            @vote = Vote.new(:destination_id => cookies[cookie_value], :user_id => params['param1'])
+            unless @vote.save
+                flash[:error] = "If you not choose destination, you can't continue"
+                redirect_to root_path and return
+            end
+        end
+        redirect_to root_path, notice: "Vote accomplished successfully!"
     end
 end

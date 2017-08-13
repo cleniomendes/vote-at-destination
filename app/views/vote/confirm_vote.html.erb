@@ -1,0 +1,43 @@
+<%= form_for @user, :url => {controller: "user", action: "create"}, :method => "post" do |f| %>    
+    <% if @user.errors.any? %>
+      <div id="error_explanation">
+          <div class="alert alert-danger">
+              The form contains <%= pluralize(@user.errors.count, "error") %>.
+          </div>
+          <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+      </div>
+    <% end %>
+    <div class="container">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="fa fa-line-chart"></span>Please enter name and email to register vote</h3>
+                </div>
+                <form>
+                    <div id="confirm_vote" class="panel-body">
+                        <div class="form-group row">
+                          <%= f.label :name, :class => "col-sm-2 col-form-label col-form-label-sm" %>
+                          <div class="col-sm-10">
+                              <%= f.text_field :name, class: "form-control form-control-sm", placeholder: 'name' %>
+                           </div>
+                        </div>
+                        <div class="form-group row">
+                          <%= f.label :email, :class => "col-sm-2 col-form-label col-form-label-sm" %>
+                          <div class="col-sm-10">
+                              <%= f.text_field :email, class: "form-control form-control-sm", placeholder: 'you@example.com' %>
+                           </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="panel-footer text-center">
+                    <%= f.submit 'Finish Vote', class: "btn btn-primary btn-block btn-sm"%>
+                </div>
+            </div>
+        </div>
+    </div>
+<%end%>
