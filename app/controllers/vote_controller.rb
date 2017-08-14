@@ -45,13 +45,13 @@ class VoteController < ApplicationController
         user = User.find(params['param1'])
         @all_votes = Vote.joins(:destination)
                           .select("count(votes.destination_id) as total, destinations.name")
-                          .group("votes.destination_id")
+                          .group("destinations.name")
                           .order("count(votes.destination_id) desc")
                           
         @user_vote = Vote.where("users.name = '#{user.name}' and users.email = '#{user.email}'")
                           .select("count(votes.destination_id) as total, destinations.name")
                           .joins(:destination,:user)
-                          .group("votes.destination_id")
+                          .group("destinations.name")
                           .order("count(votes.destination_id) desc")
         
         render :template => 'vote/show'
