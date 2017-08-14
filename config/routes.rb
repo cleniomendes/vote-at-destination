@@ -3,5 +3,6 @@ Rails.application.routes.draw do
    post 'vote', :to => 'vote#first_vote', :as => "first_vote"
    post 'vote/keep_voting', :to => "vote#keep_voting", :as => "keep_voting"
    get 'vote/finish_poll', :to => "vote#finish_poll", :as => "finish_poll"
+   get 'vote/show', :to => "vote#show_results", :as => "show"
    resources :user
 end

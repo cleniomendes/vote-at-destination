@@ -38,6 +38,22 @@ class VoteController < ApplicationController
                 redirect_to root_path and return
             end
         end
-        redirect_to root_path, notice: "Vote accomplished successfully!"
+        redirect_to show_path(:param1 => params['param1'])
+    end
+    
+    def show_results
+        user = User.find(params['param1'])
+        @all_votes = Vote.joins(:destination)
+                          .select("count(votes.destination_id) as total, destinations.name")
+                          .group("votes.destination_id")
+                          .order("count(votes.destination_id) desc")
+                          
+        @user_vote = Vote.where("users.name = '#{user.name}' and users.email = '#{user.email}'")
+                          .select("count(votes.destination_id) as total, destinations.name")
+                          .joins(:destination,:user)
+                          .group("votes.destination_id")
+                          .order("count(votes.destination_id) desc")
+        
+        render :template => 'vote/show'
     end
 end

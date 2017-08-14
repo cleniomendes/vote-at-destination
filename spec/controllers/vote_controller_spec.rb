@@ -80,14 +80,28 @@ RSpec.describe VoteController, type: :controller do
             end
         end
     
-        it "when vote successfully added" do 
+        it "when vote went successfully add" do 
             params = {:param1 => 1}
             request.cookies[:vote_0] = "1"
             request.cookies[:vote_1] = "2"
             post :finish_poll, :params => params
-            expect(response).to redirect_to(root_path)
+            expect(response).to redirect_to(show_path(:param1 => 1))
             expect(Vote.count).to eq (2)
         end
     end
     
+    describe "#Get show results" do
+        before do 
+            create(:user)
+            ["Rio De Janeiro","São Paulo"].each do |c|
+                create(:destination, :name => c)
+            end
+        end
+        
+        it "show all and user vote" do 
+            params = {:param1 => 1}
+            get :show_results, :params => params
+            expect(response).to render_template 'vote/show'
+        end
+    end
 end
